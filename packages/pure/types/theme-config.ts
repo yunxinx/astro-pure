@@ -140,7 +140,9 @@ export const ThemeConfigSchema = () =>
             /** Link style */
             style: z.string().optional().describe('Link style'),
             /** Link position */
-            pos: z.number().default(1).describe('Link position')
+            pos: z.number().default(1).describe('Link position'),
+            /** Link icon URL */
+            icon: z.string().optional().describe('Link icon URL')
           })
         )
         .optional()
