@@ -2,8 +2,8 @@
 import { Image } from 'astro:assets'
 import { type CollectionEntry, type CollectionKey, render } from 'astro:content'
 
-import { cn } from '../../utils'
-import { Button, FormattedDate, Icon } from '../user'
+import { cn } from 'astro-pure/utils'
+import { Button, FormattedDate, Icon } from 'astro-pure/user'
 
 type Props<T extends CollectionKey> = {
   post: CollectionEntry<T>
@@ -14,7 +14,7 @@ type Props<T extends CollectionKey> = {
 const { post, detailed = false, class: className } = Astro.props
 const { id, data } = post
 const { remarkPluginFrontmatter } = await render(post)
-const postDate = data.updatedDate ?? data.publishDate
+const postDate = data.publishDate
 ---
 
 <li
@@ -47,7 +47,7 @@ const postDate = data.updatedDate ?? data.publishDate
       class={cn('relative flex flex-col gap-1', !detailed && 'sm:flex-row sm:items-center')}
       style='z-index:1'
     >
-      <FormattedDate class='min-w-[95px] text-xs' date={postDate} />
+      {!detailed && <FormattedDate class='min-w-[95px] text-xs' date={postDate} />}
 
       {/* title */}
       <div class='flex justify-between flex-grow'>
@@ -90,18 +90,22 @@ const postDate = data.updatedDate ?? data.publishDate
               {data.description}
             </p>
             <div class='py-2 flex items-center gap-2 text-sm italic leading-4 text-muted-foreground'>
+              {/* date */}
+              <span class='opacity-80 text-sm not-italic'>
+                <FormattedDate date={data.publishDate} />{data.updatedDate && <> ~ <FormattedDate date={data.updatedDate} /></>}
+              </span>
               {/* reading time */}
               <span class='flex items-center gap-1'>
                 <Icon name='time' class='size-4' />
                 {remarkPluginFrontmatter.minutesRead}
               </span>
               {/* language */}
-              {data.language && (
+              {/* {data.language && (
                 <span class='flex items-center gap-1'>
                   <Icon name='earth' class='size-4' />
                   {data.language}
                 </span>
-              )}
+              )} */}
             </div>
             {data.tags.length > 0 && (
               <object title='Tags' aria-label='Tags' aria-labelledby='Tags'>

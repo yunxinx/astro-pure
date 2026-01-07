@@ -1,7 +1,7 @@
 ---
 import config from 'virtual:config'
 
-import { Icon } from '../user'
+import { Icon } from 'astro-pure/user'
 ---
 
 <header-component
@@ -71,7 +71,7 @@ import { Icon } from '../user'
   }
 </script>
 <script>
-  import { setTheme, showToast } from '../../utils'
+  import { setTheme, showToast } from 'astro-pure/utils'
 
   class HeaderComponent extends HTMLElement {
     connectedCallback() {
@@ -94,7 +94,9 @@ import { Icon } from '../user'
         // document.dispatchEvent(toggleDarkModeEvent)
         const newTheme = setTheme(undefined, true)
         darkModeBtn.dataset.theme = newTheme
-        showToast({ message: `Set theme to ${newTheme}` })
+        const themeNames: Record<string, string> = { light: '浅色', dark: '深色', system: '系统' }
+        const themeLabel = themeNames[newTheme ?? 'system'] ?? newTheme ?? 'system'
+        showToast({ message: `已切换为${themeLabel}主题` })
       })
 
       // Menu

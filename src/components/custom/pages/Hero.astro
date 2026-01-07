@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets'
 import type { InferEntrySchema } from 'astro:content'
 
-import { FormattedDate, Icon } from '../user'
+import { FormattedDate, Icon } from 'astro-pure/user'
 
 interface Props {
   data: InferEntrySchema<'blog'>
@@ -15,7 +15,9 @@ const {
 } = Astro.props
 
 const dateTimeOptions: Intl.DateTimeFormatOptions = {
-  month: 'short'
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit'
 }
 ---
 
@@ -48,22 +50,7 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
     {/* Article date */}
     <div class='flex items-center gap-1'>
       <Icon name='calendar' class='size-5' />
-      <FormattedDate class='font-sans' date={publishDate} dateTimeOptions={dateTimeOptions} />
-      {
-        updatedDate && (
-          <div class='flex items-center gap-1'>
-            <span> / </span>
-            <span>
-              Update
-              <FormattedDate
-                class='font-sans'
-                date={updatedDate}
-                dateTimeOptions={dateTimeOptions}
-              />
-            </span>
-          </div>
-        )
-      }
+      <FormattedDate class='font-sans' date={publishDate} dateTimeOptions={dateTimeOptions} />{updatedDate && <> ~ <FormattedDate class='font-sans' date={updatedDate} dateTimeOptions={dateTimeOptions} /></>}
     </div>
     {/* Times read */}
     <div class='flex items-center gap-1'>

@@ -69,12 +69,12 @@ export const theme: ThemeUserConfig = {
         pos: 1
       },
       // 公安链接 (pos=1 显示在分隔符后，带图标)
-      {
+      ({
         title: '湘公网安备43080202001051号',
         link: 'https://beian.mps.gov.cn/#/query/webSearch?code=43080202001051',
         pos: 1,
         icon: '/images/gongan.png'
-      },
+      } as any),
       // Pure theme powered (pos=2 追加到版权行)
       {
         title: 'Pure theme powered',

@@ -9,7 +9,7 @@ import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 import { visit } from 'unist-util-visit'
 
-import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+import { getBlogCollection, sortMDByDate } from '@/utils/server'
 import config from 'virtual:config'
 
 // Get dynamic import of images as a map collection

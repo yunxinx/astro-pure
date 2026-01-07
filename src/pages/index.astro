@@ -1,9 +1,9 @@
 ---
 import { Image } from 'astro:assets'
 
-import { Quote } from 'astro-pure/advanced'
-import { PostPreview } from 'astro-pure/components/pages'
-import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+import Quote from '@/components/custom/advanced/Quote.astro'
+import PostPreview from '@/components/custom/pages/PostPreview.astro'
+import { getBlogCollection, sortMDByDate } from '@/utils/server'
 import { Button, Card, Icon, Label } from 'astro-pure/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import ProjectCard from '@/components/home/ProjectCard.astro'
@@ -159,9 +159,9 @@ if (!images[imagePath])
             imagePath='/src/assets/projects/3.avif'
           />
           <ProjectCard
-            href='/projects'
-            heading='More projects'
-            subheading='Check out more projects'
+            href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+            heading='Lorem ipsum'
+            subheading='Lorem ipsum dolor sit amet'
             imagePath='/src/assets/projects/4.avif'
           />
         </div>
