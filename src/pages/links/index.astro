@@ -17,7 +17,7 @@ const linksConf = config.integ.links
 const linkEditPage = 'https://github.com/cworld1/astro-theme-pure/blob/main/public/links.json'
 ---
 
-<PageLayout title='Links' {headings} comment>
+<PageLayout title='Links' {headings}>
   <p>They're sorted randomly.</p>
   <h2 id='common-links'>Common Links</h2>
   <FriendList list={friends[0]} />
@@ -49,9 +49,8 @@ const linkEditPage = 'https://github.com/cworld1/astro-theme-pure/blob/main/publ
   </blockquote>
 
   <p>
-    可通过下方留言或 <a href={linkEditPage} target='_blank'>提交 PR</a> 申请友链。申请说明：<br />
-    Apply your link by leaving comment or <a href={linkEditPage} target='_blank'>Submitting a PR</a
-    >. Additional info:
+    可通过 <a href={linkEditPage} target='_blank'>提交 PR</a> 申请友链。申请说明：<br />
+    Apply your link by <a href={linkEditPage} target='_blank'>Submitting a PR</a>. Additional info:
   </p>
   <ul>
     <li>推荐了本站 You've recommended our link on your website</li>
