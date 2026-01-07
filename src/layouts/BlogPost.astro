@@ -40,16 +40,24 @@ const socialImage = heroImage
   : config.socialCard
 const articleDate = updatedDate?.toISOString() ?? publishDate.toISOString()
 const primaryColor = data.heroImage?.color ?? 'hsl(var(--primary) / var(--un-text-opacity))'
+const daysSinceUpdate = Math.floor((Date.now() - new Date(articleDate).getTime()) / 86400000)
 ---
 
 <PageLayout
   meta={{ articleDate, description, ogImage: socialImage, title }}
-  highlightColor={primaryColor}
   back='/blog'
 >
   {!!headings.length && <TOC {headings} slot='sidebar' />}
 
-  <Hero {data} {remarkPluginFrontmatter} slot='header' />
+  <Hero {data} {remarkPluginFrontmatter} slot='header'>
+    {
+      daysSinceUpdate > 365 && (
+        <p slot='description' class='mt-2 text-sm font-semibold not-italic text-orange-500'>
+          本文最后更新于 {daysSinceUpdate} 天前，部分内容可能已过时
+        </p>
+      )
+    }
+  </Hero>
 
   <slot />
 

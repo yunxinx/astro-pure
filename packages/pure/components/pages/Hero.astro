@@ -50,22 +50,7 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
     {/* Article date */}
     <div class='flex items-center gap-1'>
       <Icon name='calendar' class='size-5' />
-      <FormattedDate class='font-sans' date={publishDate} dateTimeOptions={dateTimeOptions} />
-      {
-        updatedDate && (
-          <div class='flex items-center gap-1'>
-            <span> - </span>
-            <span>
-                最后修改
-              <FormattedDate
-                class='font-sans'
-                date={updatedDate}
-                dateTimeOptions={dateTimeOptions}
-              />
-            </span>
-          </div>
-        )
-      }
+      <FormattedDate class='font-sans' date={publishDate} dateTimeOptions={dateTimeOptions} />{updatedDate && <> ~ <FormattedDate class='font-sans' date={updatedDate} dateTimeOptions={dateTimeOptions} /></>}
     </div>
     {/* Times read */}
     <div class='flex items-center gap-1'>

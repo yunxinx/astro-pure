@@ -3,7 +3,7 @@ import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } fro
 export const theme: ThemeUserConfig = {
   // [基本配置]
   /** 网站标题，用于元数据和浏览器标签页标题 */
-  title: '月微',
+  title: '月微yuewei',
   /** 用于首页和版权声明 */
   author: 'yuewei',
   /** 网站描述元数据 */
@@ -121,8 +121,8 @@ export const integ: IntegrationUserConfig = {
     applyTip: [
       { name: 'Name', val: theme.title },
       { name: 'Desc', val: theme.description || 'Null' },
-      { name: 'Link', val: 'https://astro-pure.js.org/' },
-      { name: 'Avatar', val: 'https://astro-pure.js.org/favicon/favicon.ico' }
+      { name: 'Link', val: 'https://yueweix.com/' },
+      { name: 'Avatar', val: 'https://yueweix.com/favicon/favicon.ico' }
     ],
     // 在 `public/avatars/` 缓存头像以提升用户体验
     cacheAvatar: false

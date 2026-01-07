@@ -29,6 +29,16 @@ const socialImageURL = new URL(ogImage ? ogImage : config.socialCard, Astro.url)
 
 {/* Font preloads */}
 <Font cssVariable='--font-satoshi' preload={[{ subset: 'latin', style: 'normal' }]} />
+<link
+  href='https://fontsapi.zeoseven.com/521/main/result.css'
+  onload="this.rel='stylesheet'"
+  rel='preload'
+  as='style'
+  crossorigin
+/>
+<noscript>
+  <link rel='stylesheet' href='https://fontsapi.zeoseven.com/521/main/result.css' />
+</noscript>
 <style>
   body {
     font-family: var(--font-satoshi);

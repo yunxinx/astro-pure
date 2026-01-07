@@ -1,5 +1,4 @@
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
-import vercel from '@astrojs/vercel'
 import AstroPureIntegration from 'astro-pure'
 import { defineConfig, fontProviders } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
@@ -25,7 +24,7 @@ import config from './src/site.config.ts'
 // https://astro.build/config
 export default defineConfig({
   // [基础配置]
-  site: 'https://astro-pure.js.org',
+  site: 'https://yueweix.com',
   // 部署到子路径
   // https://astro-pure.js.org/docs/setup/deployment#platform-with-base-path
   // base: '/astro-pure/',
@@ -35,18 +34,15 @@ export default defineConfig({
 
   // [适配器]
   // https://docs.astro.build/en/guides/deploy/
-  adapter: vercel(),
-  output: 'server',
-  // 本地（独立模式）
-  // adapter: node({ mode: 'standalone' }),
-  // output: 'server',
+  // 已切换为纯静态模式，无需 adapter
 
   // [资源配置]
   image: {
     responsiveStyles: true,
     service: {
       entrypoint: 'astro/assets/services/sharp'
-    }
+    },
+    domains: ['pic.yueweix.com']
   },
 
   // [Markdown 配置]

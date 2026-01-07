@@ -52,6 +52,12 @@ span.katex-display {
 }
 
 /* [Shiki basic] */
+.astro-code,
+.astro-code code,
+.astro-code pre,
+.astro-code span {
+  font-family: 'JetBrains Maple Mono', monospace !important;
+}
 .astro-code {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
