@@ -46,3 +46,8 @@ a {
     color: hsl(var(--primary) / var(--un-text-opacity, 1));
   }
 }
+
+/* [TOC] Extra indent for depth-4 (h4) */
+toc-heading ul ul ul a.toc-item {
+  padding-inline-start: 2.75rem;
+}

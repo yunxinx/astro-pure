@@ -1,0 +1,344 @@
+---
+title: Windows 下通过 PowerShell 配置 Mcp
+description: '记录一下在 Windows 上使用 Cursor 或者 Roocode 的时候，通过 PowerShell 配置 Mcp 服务器的方法'
+publishDate: '2025-05-31 19:31:00'
+tags:
+  - AI
+  - MCP
+---
+
+import { Aside } from 'astro-pure/user'
+
+<Aside type="caution" title="重要">
+  这篇文章的图片使用的是一个免费图床，如果图片加载不出来请见谅，因为个人原因暂不考虑迁移，如影响到阅读请通过页面底部邮件方式联系我进行修复<br/>
+  本文最先发布在：https://linux.do/t/topic/624552 上，建议去原贴查看
+</Aside>
+
+## 前言
+> 如果嫌前言啰嗦，可以直接跳转到后文 “改用 Powershell” 部分<br/>
+> 没有使用 CMD，哪怕我后面发现在 Powershell 中启动 Mcp 服务器，实际上也是在 CMD 中启动的<br/>
+> 因为我个人更喜欢更现代的 Powershell 而非 CMD
+
+我一开始是在我的 MacBook 上面使用 Mcp 的，说实话并没有碰到什么奇怪的问题，只需要配置好必要的终端环境，比如 Nodejs 或者 Python 环境什么的，然后找到自己想用的 Mcp，比如我自己常用的是一位佬友写的 [Codelf](https://linux.do/t/topic/556607)，通过阅读配置说明，我们可以获取到一个类似以下形式的 JSON 内容：
+
+```json
+{
+  "mcpServers": {
+    "codelf": {
+      "command": "npx",
+      "args": ["codelf"]
+    }
+  }
+}
+```
+
+> 在此引用一下前文提到的 Codelf Mcp 配置文件，仅作为解释使用，如果需要正确使用该 Mcp，请点击前文链接去原帖和项目地址查阅
+
+然后将其中的核心配置文件，也就是：
+
+```json
+"codelf": {
+    "command": "npx",
+    "args": [
+        "codelf"
+    ]
+}
+```
+
+部分，然后粘贴到我的 Cursor 或者 Roocode 的 Mcp 配置文件中去。然后稍等片刻（网络通畅情况下），就可以看到工作指示灯变成绿色：
+
+<img
+    src="https://free.picui.cn/free/2025/06/01/683c31b4d6736.png"
+    alt="cursor"
+    loading="lazy"
+    decoding="async"
+    class="mx-auto block w-1/2"
+/>
+
+下方的是 Roocode 的 Mcp 配置界面，可以看到也是生效的（虽然启用的并不是 Codelf 而是 context7）：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c2a4cb2e52.png" alt="Roocode 的 Mcp 配置界面图" style="zoom:67%;" /></center>
+
+然后我就可以愉快地在我的 MacBook 上使用 Mcp 给我带来的便利了……
+
+## 尝试用 CMD 启动 Mcp
+
+但是有一天，我心血来潮，打算在我的 Windows 电脑上进行 Mcp 的使用。我先在我的 Windows 上配置好了 Nodejs 环境和 Python 环境，然后我按照在 Mac 上的逻辑，直接复制粘贴一气呵成，然后就……失败了
+
+我尝试通过搜索引擎得到解决方案（没有用 AI 搜索是因为我还不太习惯）：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c2b9a781da.png" alt="搜索结果图" style="zoom:50%;" /></center>
+
+第一个第二个写的文章感觉起来还不错，然后我依葫芦画瓢，都试了一次：
+
+> 在此之前我已通过
+>
+> ```
+> npm install -g codelf
+> ```
+>
+> 命令全局安装了佬友的包（其实可以不用这么做的，当时是因为问了一下 AI）
+>
+> 我的 Windows 电脑上的 Cursor 版本为 0.49.6，Roocode 版本为 v3.15.5，Windows 版本为 11 24H2
+>
+> Powershell 版本为 v7.5.1（通过 Winget 命令参考[官方文档](https://learn.microsoft.com/zh-cn/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.5#install-powershell-using-winget-recommended)安装的）
+>
+> Nodejs 通过 Fnm（v1.38.1） 管理，Node 版本为 v20.19.0，npm 版本为 v10.8.2
+
+1. 第一篇文章的思路：
+
+```json
+{
+    "mcpServers": {
+        "codelf": {
+            "command": "cmd /c npx",
+            "args": [
+                "codelf"
+            ]
+        }
+    }
+}
+```
+
+嗯…… 失败了：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c2c714d9fa.png" alt="思路一失败图" style="zoom:50%;" /></center>
+
+2. 第二篇文章的思路：
+
+```json
+{
+    "mcpServers": {
+        "codelf": {
+            "command": "cmd",
+            "args": [
+                "/c",
+                "npx",
+                "codelf"
+            ]
+        }
+    }
+}
+```
+
+还是失败了，报错是一样的，而且说实话，我感觉这两个都是同一个命令（其实还有一个版本，是在第二篇的思路的 “/c” 和 “npx” 中间加上一个 “-y” 但是也不行）
+
+然后我就纳闷了，怎么回事儿。于是我就自己打开一个 cmd 窗口，试了一下：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c2ce07ce16.png" alt="CMD窗口图" style="zoom:50%;" /></center>
+
+原来是没有设置好 CMD 下的环境变量，怪不得启动不成功
+
+那么到这里其实已经知道了原因了，可是我一般不用 CMD 的啊，我的开发工具也好，终端的默认启动也好都是 Powershell，而且我看站里面有人说，每次启动 Mcp 服务器会出现一个黑框框？好像是 CMD 的那个进程框框，我也不喜欢……
+
+所以……
+
+## 改用 PowerShell
+
+### Cursor 配置 Mcp
+
+> 在此之前我已通过（重声明一次，便于跳看文章的读者理解）
+>
+> ```
+> npm install -g codelf
+> ```
+>
+> 命令全局安装了佬友的包（其实可以不用这么做的，当时是因为问了一下 AI）
+>
+> 我的 Windows 电脑上的 Cursor 版本为 0.49.6，Roocode 版本为 v3.15.5，Windows 版本为 11 24H2
+>
+> Powershell 版本为 v7.5.1（通过 Winget 命令参考[官方文档](https://learn.microsoft.com/zh-cn/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.5#install-powershell-using-winget-recommended)安装的）
+>
+> Nodejs 通过 Fnm（v1.38.1） 管理，Node 版本为 v20.19.0，npm 版本为 v10.8.2
+
+我们重新审视一下前文最后提及的两个思路的配置文件内容：
+
+```json
+// 第一种思路（JSON中不允许有注释，我这里只是方便解释）
+{
+    "mcpServers": {
+        "codelf": {
+            "command": "cmd /c npx",
+            "args": [
+                "codelf"
+            ]
+        }
+    }
+}
+```
+
+```json
+// 第二种思路（JSON中不允许有注释，我这里只是方便解释）
+{
+    "mcpServers": {
+        "codelf": {
+            "command": "cmd",
+            "args": [
+                "/c",
+                "npx",
+                "codelf"
+            ]
+        }
+    }
+}
+```
+
+我们可以写出以下配置文件：
+
+```json
+{
+    "mcpServers": {
+        "codelf": {
+            "command": "cmd /c pwsh",
+            "args": [
+                "-c",
+                "npx",
+                "codelf"
+            ]
+        }
+    }
+}
+```
+
+或者如下形式
+
+```json
+{
+    "mcpServers": {
+        "codelf": {
+            "command": "cmd",
+            "args": [
+                "/c",
+                "pwsh",
+                "-c",
+                "npx",
+                "codelf"
+            ]
+        }
+    }
+}
+```
+
+任选其一粘贴到 Cursor 的 Mcp 配置文件中后刷新：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c31b4d6736.png" alt="启动Mcp成功图" style="zoom:50%;" /></center>
+
+启动成功，检测是否生效：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c31e07c5e0.png" alt="Cursor生效成功图" style="zoom:50%;" /></center>
+
+成功生效。同时，我并没有弹出什么黑窗口，我不知道是不是我通过 CMD 启动 Powershell 的原因，总之，这很好
+
+### Roocode 配置 Mcp
+
+但是在 Roocode 中需要注意一下，似乎第一种形式的写法是不会生效的，总之我复制到 Roocode 的配置文件中后，等待许久都不见加载成功，也没有看到报错
+
+而采用第二种形式，也就是如下形式，则可以生效：
+
+```json
+{
+    "mcpServers": {
+        "codelf": {
+            "command": "cmd",
+            "args": [
+                "/c",
+                "pwsh",
+                "-c",
+                "npx",
+                "codelf"
+            ]
+        }
+    }
+}
+```
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c32452e18b.png" alt="Roocode生效成功图" style="zoom:50%;" /></center>
+
+验证一下：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c3272460a3.png" alt="Roocode使用成功图" style="zoom:50%;" /></center>
+
+至此，便成功使用 Powershell 启动本地 Mcp 服务器
+
+如果没有特殊要求，建议采用第二种写法，无论是 Cursor 还是 Roocode 都可以生效
+
+### 其他 Mcp 添加尝试
+
+#### 添加 Context 7
+
+官方 JSON 配置：
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    }
+  }
+}
+```
+
+修改为：
+
+```json
+{
+    "mcpServers": {
+        "context7": {
+            "command": "pwsh",
+            "args": [
+                "-c",
+                "npx",
+                "@upstash/context7-mcp@latest"
+            ]
+        }
+    }
+}
+```
+
+即可在 Cursor 中正常生效：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c32e1638e1.png" alt="Cursor生效成功图" style="zoom:50%;" /></center>
+
+Roocode 似乎不可以采用上面的写法，会出现问题：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c3306e9ee8.png" alt="Roocode失败图" style="zoom:50%;" /></center>
+
+采用如下写法即可：
+
+```json
+{
+    "mcpServers": {
+        "context7": {
+            "command": "cmd",
+            "args": [
+                "/c",
+                "pwsh",
+                "-c",
+                "npx",
+                "@upstash/context7-mcp@latest"
+            ]
+        }
+    }
+}
+```
+
+我猜测是因为我的 Cursor 已经设置好了启动的终端为我的 Powershell：
+
+<center><img src="https://free.picui.cn/free/2025/06/01/683c332d6dc8e.png" alt="Cursor配置界面图" style="zoom:50%;" /></center>
+
+所以可以正确识别 `pwsh` 命令（仅仅个人猜测，没有验证）
+
+但是 Roocode 似乎没有？
+
+总之不是很影响，如果不想出现这样的问题，可以统一采用第二种写法也就是 Roocode 可以识别的写法即可
+
+## 结语
+
+以上就是我自己在 Windows 上面配置和使用 Mcp 的经验
+
+限于时间和精力，以及我自己的使用情况，我仅仅粗略地分享了两种 Mcp 服务的配置方式，至于其他的，比如使用 `uvx` 的，我便没有尝试了，但是我个人觉得，方式应该是差不多的
+
+然后补充一下我启动 Mcp 的时候没有出现黑框框，我不知道是不是个例，但是确实没有任何窗口弹出…… 反而用 CMD 命令的时候确实弹出来了，但是因为加载环境失败直接自己关闭了……总之没有弹出额外的窗口确实挺好的
+
+最后限于个人水平，文章内容如有不妥或者缺漏或者其他问题，欢迎联系我反馈
