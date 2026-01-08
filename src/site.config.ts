@@ -48,7 +48,7 @@ export const theme: ThemeUserConfig = {
   /** 配置网站头部导航 */
   header: {
     menu: [
-      { title: 'Blog', link: '/blog' },
+      { title: 'Post', link: '/post' },
       { title: 'Docs', link: '/docs' },
       // { title: 'Projects', link: '/projects' },
       { title: 'Links', link: '/links' },

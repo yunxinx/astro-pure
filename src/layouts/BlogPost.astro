@@ -47,7 +47,7 @@ const daysSinceUpdate = Math.floor((Date.now() - new Date(articleDate).getTime()
 
 <PageLayout
   meta={{ articleDate, description, ogImage: socialImage, title }}
-  back='/blog'
+  back='/post'
 >
   {!!headings.length && <TOC {headings} slot='sidebar' />}
 
