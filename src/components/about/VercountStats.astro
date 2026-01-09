@@ -1,10 +1,166 @@
 <div class='not-prose mt-3 mb-8'>
   <button
+    id='vercount-easter-egg'
     type='button'
     class='inline-flex items-center rounded-xl border bg-transparent px-4 py-3 text-sm text-muted-foreground transition-colors hover:bg-muted cursor-pointer select-none'
   >
-    本站总访问量 <span id='vercount_value_site_pv' class='font-medium text-foreground'>&nbsp;-&nbsp;</span> 次
-    <span class='mx-2'>|</span>
-    总访客数 <span id='vercount_value_site_uv' class='font-medium text-foreground'>&nbsp;-&nbsp;</span> 人
+    <span data-view='stats'>
+      本站总访问量 <span id='vercount_value_site_pv' class='font-medium text-foreground'>&nbsp;-&nbsp;</span> 次
+      <span class='mx-2'>|</span>
+      总访客数 <span id='vercount_value_site_uv' class='font-medium text-foreground'>&nbsp;-&nbsp;</span> 人
+    </span>
+    <span data-view='message' class='hidden font-medium text-foreground'></span>
   </button>
 </div>
+
+<script is:inline>
+  (() => {
+    const trigger = document.getElementById('vercount-easter-egg')
+    if (!(trigger instanceof HTMLButtonElement)) return
+
+    const statsView = trigger.querySelector('[data-view="stats"]')
+    const messageView = trigger.querySelector('[data-view="message"]')
+    if (!(statsView instanceof HTMLElement)) return
+    if (!(messageView instanceof HTMLElement)) return
+
+    const thresholds = new Map([
+      [6, '666'],
+      [12, '怎么还在点啊！'],
+      [24, '真的没有了！'],
+      [48, '真的真的没有了！！！'],
+      [96, '还在点吗？'],
+      [188, '999']
+    ])
+
+    let clicks = 0
+    let celebrating = false
+
+    function showStats() {
+      statsView.classList.remove('hidden')
+      messageView.classList.add('hidden')
+      messageView.textContent = ''
+    }
+
+    function showMessage(text) {
+      statsView.classList.add('hidden')
+      messageView.classList.remove('hidden')
+      messageView.textContent = text
+    }
+
+    function spawnCelebration(durationMs) {
+      const emojis = ['🎉', '🎊', '✨', '🥳', '🎆', '🎇', '🪩', '🍾']
+      const sides = ['left', 'right']
+      const containers = []
+
+      for (const side of sides) {
+        const container = document.createElement('div')
+        container.className = `vercount-celebrate vercount-celebrate--${side}`
+        container.setAttribute('aria-hidden', 'true')
+        document.body.append(container)
+        containers.push(container)
+
+        const count = 14
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement('span')
+          el.className = 'vercount-celebrate__emoji'
+          el.textContent = emojis[Math.floor(Math.random() * emojis.length)]
+
+          const x = Math.floor(Math.random() * 110) * (side === 'left' ? 1 : -1)
+          const y = Math.floor(Math.random() * 30)
+          const rotate = Math.floor(Math.random() * 40) - 20
+          const delay = Math.floor(Math.random() * 350)
+          const drift = Math.floor(Math.random() * 40) - 20
+
+          el.style.setProperty('--x', `${x}px`)
+          el.style.setProperty('--y', `${y}px`)
+          el.style.setProperty('--r', `${rotate}deg`)
+          el.style.setProperty('--d', `${delay}ms`)
+          el.style.setProperty('--drift', `${drift}px`)
+          container.append(el)
+        }
+      }
+
+      window.setTimeout(() => {
+        for (const container of containers) container.remove()
+      }, durationMs)
+    }
+
+    trigger.addEventListener('click', () => {
+      if (celebrating) return
+
+      clicks += 1
+      const hit = thresholds.get(clicks)
+      if (!hit) {
+        showStats()
+        return
+      }
+
+      showMessage(hit)
+
+      if (clicks !== 188) return
+
+      celebrating = true
+      trigger.disabled = true
+      spawnCelebration(3000)
+
+      window.setTimeout(() => {
+        clicks = 0
+        celebrating = false
+        trigger.disabled = false
+        showStats()
+      }, 3000)
+    })
+  })()
+</script>
+
+<style is:global>
+  .vercount-celebrate {
+    position: fixed;
+    bottom: 0.75rem;
+    z-index: 9999;
+    pointer-events: none;
+    display: block;
+    width: 12rem;
+    height: 10rem;
+    overflow: visible;
+  }
+
+  .vercount-celebrate--left {
+    left: 0.75rem;
+  }
+
+  .vercount-celebrate--right {
+    right: 0.75rem;
+    text-align: right;
+  }
+
+  .vercount-celebrate__emoji {
+    position: absolute;
+    bottom: 0;
+    font-size: 1.4rem;
+    opacity: 0;
+    transform: translate(var(--x, 0), var(--y, 0)) rotate(var(--r, 0));
+    animation: vercount-float 900ms ease-out var(--d, 0ms) forwards;
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
+    will-change: transform, opacity;
+  }
+
+  @keyframes vercount-float {
+    0% {
+      opacity: 0;
+      transform: translate(var(--x, 0), var(--y, 0)) rotate(var(--r, 0)) scale(0.9);
+    }
+    10% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--x, 0) + var(--drift, 0)), -150px) rotate(var(--r, 0))
+        scale(1.25);
+    }
+  }
+
+  #vercount-easter-egg:disabled {
+    opacity: 1;
+  }
+</style>
