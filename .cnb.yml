@@ -3,19 +3,20 @@ $:
     - docker:
         image: node:22
         volumes:
-          # 缓存 pnpm 存储库
-          - /root/.local/share/pnpm/store:cow
+            # 缓存 npm 全局包和 bun 的缓存
+            - /root/.npm:cow
+            - /root/.bun/install/cache:cow
 
       # 导入密钥仓库中的环境变量
       imports:
         - https://cnb.cool/yueweix/secret_repo/-/blob/main/mainnotes-sshkey.yml
 
       stages:
-        - name: 编译项目
+        - name: 安装 bun 并编译项目
           script:
-            - corepack enable
-            - pnpm install
-            - pnpm run build
+            - npm install -g bun
+            - bun install
+            - bun run build
             - ls -lh dist
 
         - name: 同步并设置权限
@@ -52,19 +53,20 @@ main:
     - docker:
         image: node:22
         volumes:
-          # 缓存 pnpm 存储库
-          - /root/.local/share/pnpm/store:cow
+            # 缓存 npm 全局包和 bun 的缓存
+            - /root/.npm:cow
+            - /root/.bun/install/cache:cow
 
       # 导入密钥仓库中的环境变量
       imports:
         - https://cnb.cool/yueweix/secret_repo/-/blob/main/mainnotes-sshkey.yml
 
       stages:
-        - name: 编译项目
+        - name: 安装 bun 并编译项目
           script:
-            - corepack enable
-            - pnpm install
-            - pnpm run build
+            - npm install -g bun
+            - bun install
+            - bun run build
             - ls -lh dist
 
         - name: 同步并设置权限
