@@ -85,7 +85,7 @@ export const theme: ThemeUserConfig = {
     /** 是否在底部显示 "Astro & Pure theme powered" 链接 */
     credits: false,
     /** 网站社交媒体账号配置 */
-    social: { email: 'mailto:zzz@yueweix.com' }
+    social: { email: 'mailto:yunxinx@foxmail.com' }
   },
 
   // [内容配置]
