@@ -2,6 +2,7 @@
 import { Button, Collapse, Spoiler, Timeline } from 'astro-pure/user'
 import PageLayout from '@/layouts/CommonPage.astro'
 import ToolSection from '@/components/about/ToolSection.astro'
+import VercountStats from '@/components/about/VercountStats.astro'
 
 const headings = [
   { depth: 2, slug: 'tools', text: 'Tools' },
@@ -21,9 +22,11 @@ const headings = [
       因为备案的问题，本站是没有任何评论功能的，所以如果有什么建议或者疑问的话，都可以通过本页最下方的邮箱地址联系我
   </p>
 
-  {/* tools */}
-  <h2 id='tools'>Tools</h2>
-  <p>我在用的一部分工具：</p>
+	  <VercountStats />
+
+	  {/* tools */}
+	  <h2 id='tools'>Tools</h2>
+	  <p>我在用的一部分工具：</p>
   <ToolSection
     class='mb-5'
     title='Productivity'
@@ -143,6 +146,9 @@ const headings = [
     </li>
     <li>
       服务器供应商：<a href='https://www.aliyun.com/' target='_blank' style='text-decoration: none;'>阿里云</a>
+    </li>
+    <li>
+      访客统计：<a href='https://www.vercount.one/' target='_blank' style='text-decoration: none;'>Vercount</a>
     </li>
     <li>
       CDN：<a href='https://cloud.tencent.com/product/teo' target='_blank' style='text-decoration: none;'>EdgeOne</a> + <a href='https://www.aliyun.com/product/esa' target='_blank' style='text-decoration: none;'>ESA</a>
