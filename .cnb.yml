@@ -1,0 +1,97 @@
+$:
+  web_trigger_build_image:
+    - docker:
+        image: node:22
+        volumes:
+          # 缓存 pnpm 存储库
+          - /root/.local/share/pnpm/store:cow
+
+      # 导入密钥仓库中的环境变量
+      imports:
+        - https://cnb.cool/yueweix/secret_repo/-/blob/main/mainnotes-sshkey.yml
+
+      stages:
+        - name: 编译项目
+          script:
+            - corepack enable
+            - pnpm install
+            - pnpm run build
+            - ls -lh dist
+
+        - name: 同步并设置权限
+          image: tencentcom/rsync
+          settings:
+            # 基础连接配置
+            user: $REMOTE_USERNAME
+            key: $PRIVATE_KEY
+            hosts:
+              - $REMOTE_HOST
+            port: $REMOTE_PORT
+
+            source: ./dist/
+            target: /opt/1panel/www/sites/yueweix.com/index
+
+            # 开启递归，否则不会同步子目录
+            recursive: true
+            # 删除目标目录中多余的文件
+            delete: true
+
+            exclude:
+              - '.well-known/**'
+
+            # 额外参数：-a 包含归档模式（保留权限、时间戳等），-v 显示过程
+            args: '-av'
+
+            # 插件执行完 rsync 后，在远程服务器执行的后续命令
+            script:
+              - chown -R 1000:1000 /opt/1panel/www/sites/yueweix.com/index
+              - echo "Deploy Success"
+
+main:
+  push:
+    - docker:
+        image: node:22
+        volumes:
+          # 缓存 pnpm 存储库
+          - /root/.local/share/pnpm/store:cow
+
+      # 导入密钥仓库中的环境变量
+      imports:
+        - https://cnb.cool/yueweix/secret_repo/-/blob/main/mainnotes-sshkey.yml
+
+      stages:
+        - name: 编译项目
+          script:
+            - corepack enable
+            - pnpm install
+            - pnpm run build
+            - ls -lh dist
+
+        - name: 同步并设置权限
+          image: tencentcom/rsync
+          settings:
+            # 基础连接配置
+            user: $REMOTE_USERNAME
+            key: $PRIVATE_KEY
+            hosts:
+              - $REMOTE_HOST
+            port: $REMOTE_PORT
+
+            source: ./dist/
+            target: /opt/1panel/www/sites/yueweix.com/index
+
+            # 开启递归，否则不会同步子目录
+            recursive: true
+            # 删除目标目录中多余的文件
+            delete: true
+
+            exclude:
+              - '.well-known/**'
+
+            # 额外参数：-a 包含归档模式（保留权限、时间戳等），-v 显示过程
+            args: '-av'
+
+            # 插件执行完 rsync 后，在远程服务器执行的后续命令
+            script:
+              - chown -R 1000:1000 /opt/1panel/www/sites/yueweix.com/index
+              - echo "Deploy Success"
